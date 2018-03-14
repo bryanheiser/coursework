@@ -1,0 +1,38 @@
+<html>
+<head>
+	<title>Hello</title>
+	<script src="http://code.jquery.com/jquery-2.2.0.js"></script>
+	<script>
+ 	$(document).ready(function() {
+ 		var url = 'https://api.forecast.io/forecast/098205b10913f9041525a6388b537921/40.014984,-105.270546'
+ 		$.ajax({url:url, dataType:"jsonp"}).then(function(data) {
+ 			console.log(data)
+			
+			$('#temp').append(data.currently.temperature)
+			$('#summary').append(data.currently.summary)
+			$('#humidity').append(data.currently.humidity)
+ 		})
+ 	})
+ 	</script>
+</head>
+<body>
+	<p>Hello, world.</p>
+	<p id="temp">Temperature: </p>
+	<p id="summary">Summary: </p>
+	<p id="humidity">Humidity: </p>
+	<script>
+		var text = '{"players": [ \
+		 {"name": "DeMarcus Ware", "jersey": 94}, \
+		 {"name": "Peyton Manning", "jersey": 18}, \
+		 {"name": "Von Miller", "jersey": 58} \
+		]}'
+
+		var team = JSON.parse(text)
+		
+		console.log(team.players[0].name,team.players[0].jersey)
+		console.log(team.players[1].name,team.players[1].jersey)
+		console.log(team.players[2].name,team.players[2].jersey)
+	</script>
+</body>
+</html>
+

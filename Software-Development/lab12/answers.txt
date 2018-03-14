@@ -1,0 +1,128 @@
+Bryan Heiser
+
+Part 1:
+2. A segmentation fault is returned.
+
+4. The error is at line 89.
+
+6. The problem is that pt in main is not allocated. In zeroDist zero_pt is created and pointed to NULL, then it is allocated using malloc. 
+To solve this pt just needs to be allocated after being pointed to NULL.
+
+9. break zeroDist to set a breakpoint at that function.
+
+11. print other_pt->x and print other_pt->y were the commands to print x and xy from other_pt.
+
+12. Simply entering delete removed all breakpoints, including the one at zeroDist.
+
+Part 2:
+2. The leaked 16 million bytes of memory when ran with default iterations.
+
+3. The leaks occur at lines 41 and 93.
+
+4. The problem is that zero_pt and pt are both allocated, but they are never freed. To solve this I just freed both pt and zero_pt, and then all the leaks were fixed.
+
+Part 3:
+1. default takes 0.08 seconds to run (1 million iterations) and using 15000000 iterations it takes 1.01 seconds to run.
+
+4. _int_free (14.05%), _ieee754_pow_sse2 (11.77%), main (11.54%), _int_malloc (11.01%), and random_r (9.86%) are the top 5 places the code spends its time.
+
+6. To make this code faster I made zero_pt a global variable initializing it to point to NULL at the beginning of the program.
+Then in my main I allocated zero_pt and initialized its x and y both to 0.
+Next I editted the dist function because a lot of time was being spent here within pow. So instead of using pow to square the differences in x and y values of pt_a and pt_b, I just multplied them by themselves. 
+Which is essentially the same as squaring the value.
+
+8. After making these adjustments the time went down from 1.01 seconds to 0.53 seconds.
+
+Now my pi.c file looks like this (I just left out all the include statements):
+
+/* Local Types */
+typedef struct coordinate {
+    double x;
+    double y;
+} coordinate_t;
+
+coordinate_t* zero_pt = NULL;
+
+/* Local Functions */
+double dist(const coordinate_t* pt_a, const coordinate_t* pt_b){    
+	return sqrt((pt_a->x - pt_b->x)*(pt_a->x - pt_b->x) + (pt_a->y - pt_b->y)*(pt_a->y - pt_b->y));
+}
+
+double zeroDist(const coordinate_t* other_pt){
+
+    /* Local vars */
+    double d = 0.0;
+    //coordinate_t* zero_pt = NULL;
+
+    if(!zero_pt){
+        fprintf(stderr, "Malloc failed\n");
+        return NAN;
+    }
+
+    /* Calculate Distance */
+    d = dist(zero_pt, other_pt);
+
+    /* Return distance */
+    return d;
+
+}
+
+/* Main */
+int main(int argc, char* argv[]){
+
+    /* Local vars */
+    long i;
+    long iterations;
+    coordinate_t* pt = NULL;
+    long inCircle = 0;
+    long inSquare = 0;
+    double pCircle = 0.0;
+    double piCalc = 0.0;
+
+    zero_pt = malloc(sizeof(*zero_pt));
+    zero_pt->x = 0.0;
+    zero_pt->y = 0.0;
+
+    /* Process program arguments to select iterations */
+    if(argc < 2){
+        /* Set default iterations if not supplied */
+        iterations = DEFAULT_ITERATIONS;
+    }
+    else{
+        /* Set iterations if supplied */
+        iterations = atol(argv[1]);
+        if(iterations < 1){
+            fprintf(stderr, "Bad iterations value\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    /* Seed RNG */
+    srand(time(NULL));
+
+    /* Allocate pt */
+    pt = malloc(sizeof(*pt));
+    /* Calculate pi using statistical methode across all iterations*/
+    
+    for(i=0; i<iterations; i++){
+        /* todo: remember to allocate pt */
+        pt->x = (rand() % (RADIUS * 2)) - RADIUS;
+        pt->y = (rand() % (RADIUS * 2)) - RADIUS;
+        if(zeroDist(pt) < RADIUS){
+            inCircle++;
+        }
+        inSquare++;
+    }
+
+
+    /* Finish calculation */
+    pCircle = (double) inCircle / (double) inSquare;
+    piCalc = pCircle * 4.0;
+
+    /* Print result */
+    fprintf(stdout, "pi = %f\n", piCalc);
+ 
+    free(pt);
+    free(zero_pt);
+    return 0;
+}

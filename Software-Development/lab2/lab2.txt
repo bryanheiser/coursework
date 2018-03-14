@@ -1,0 +1,155 @@
+Bryan Heiser
+
+Step 2:
+diff fruitsNew.txt fruitsOld.txt
+> indicates that the following word was in file2 and not in file1
+< same as above just the opposite
+-c shows where the difference is in the text showing a few lines above/below
+diff fruitsNew.txt fruitsOld.txt
+11a12
+> Cranberry
+21d21
+< Jackfruit
+31a32
+> Nectarine
+40a42
+> Prickly Pear
+diff -c fruitsNew.txt fruitsOld.txt
+*** fruitsNew.txt	2016-01-19 18:45:54.000000000 -0700
+--- fruitsOld.txt	2016-01-19 18:45:54.000000000 -0700
+***************
+*** 9,14 ****
+--- 9,15 ----
+  Camu Camu berry
+  Cherries
+  Coconut
++ Cranberry
+  Cucumber
+  Currents
+  Dates
+***************
+*** 18,24 ****
+  Gooseberry
+  Grapefruit
+  Grapes
+- Jackfruit
+  Kiwi
+  Kumquat
+  Lemon
+--- 19,24 ----
+***************
+*** 29,34 ****
+--- 29,35 ----
+  Mangosteen
+  Melon
+  Mulberry
++ Nectarine
+  Orange
+  Papaya
+  Passion Fruit
+***************
+*** 38,43 ****
+--- 39,45 ----
+  Plum
+  Pomegranate
+  Pomelo 
++ Prickly Pear
+  Prunes
+  Raspberries
+  Strawberries
+
+Step 3:
+wc -l testPasswd.txt
+15 testPasswd.txt
+wc -m testPasswd.txt
+692 testPasswd.txt
+
+Step 4:
+cut -d ':' -f 1 testPasswd.txt
+root
+daemon
+sys
+games
+mail
+www-data
+backup
+nobody
+syslog
+whoopsie
+user
+sshd
+ntp
+mysql
+vboxadd
+
+cut -d ' ' -f 2,4 grades.txt
+LN HW1
+Slaven 1
+Eustathios 1
+Saša 0
+Gerard 1
+Babur 0
+Marin 0
+Marko 1
+
+Step 5:
+cut -d ':' -f 4 testPasswd.txt | sort -g | uniq
+0
+1
+2
+3
+5
+99
+999
+1000
+1337
+
+cut -d ':' -f 1,6 testPasswd.txt | grep -e ^m -e ^w -e ^s
+sys:/dev
+mail:/var/mail
+www-data:/var/www
+syslog:/home/syslog
+whoopsie:/nonexistent
+sshd:/var/run/sshd
+mysql:/nonexistent
+
+Step 6:
+sed 's/[a-z]//g' leetSpeak.txt
+0 4 34 4 053 70 473 7 0 4'7 43 17 1
+
+sed 's/[0-9]//g' leetSpeak.txt
+yu cn ld  hr  wr bu yu cn' mk  drnk
+
+sed 's/[0-9]/_/g' leetSpeak.txt
+y_u c_n l__d _ h_r__ __ w___r bu_ y_u c_n'_ m_k_ __ dr_nk
+
+sed 's/0/o/g' leetSpeak.txt | sed 's/4/a/g' | sed 's/3/e/g' | sed 's/7/t/g' | sed 's/1/i/g' | sed 's/5/s/g'
+you can lead a horse to water but you can't make it drink
+
+Step 7:
+awk '{print $1, $2, (($3 + $4 + $5 + $6 + $7)/5)*100}' grades.txt
+FN LN 0
+Ryan Slaven 80
+Jephthah Eustathios 40
+Andreas Saša 60
+Godofredo Gerard 100
+Edwin Babur 80
+Ahmad Marin 0
+Jett Marko 80
+
+awk '{sum+=$3; n++} END {if (n > 0) print (sum/(n-1))*100}' grades.txt
+71.4286
+
+Step 8:
+egrep '[0-9]{3}-[0-9]{3}-[0-9]{4}' regex_practice_data.txt | wc -l
+770
+
+egrep '303-441-[0-9]{4}' regex_practice_data.txt | wc -l
+51
+
+egrep '@' regex_practice_data.txt | wc -l
+17706
+
+egrep '\.gov' regex_practice_data.txt | wc -l
+58
+
