@@ -1,0 +1,109 @@
+gcc -Wall -g -m64 -fno-omit-frame-pointer -fno-stack-protector fileName.c -o fileName
+
+gdb fileName
+disassemble functionName (shows assemly code)
+
+run
+break (line number or function name)
+continue
+breakpoints show you line it stops at and is about to execute
+step (steps line by line)
+step # of lines
+display
+undisplay
+
+
+Bomb Lab:
+
+disassemble call (from executable to assembly -- .c to .s)
+objdump -d bomb > bomb.s
+
+gdb bomb (opens bomb file in gdb)
+disas phase 1
+set break point at explode bomb
+info break (shows what break points are currently in place)
+*can ignore 1st 2 lines and last 2 lines within each phase*
+
+given a 64 bit word:
+eax  e and x mean extended
+ebx
+ecx
+edx
+
+rax  r stands for register
+.
+.
+rdx
+
+rax is the full 64 bit word
+eax is the 32 bit portion of that word
+ax is the lower 16 bit portion of that word
+ah is upper 8 bits ax
+al is lower 8 bits of ax
+a is accumulator
+c is count
+esi (souce index)
+edi (destination index)
+return value has to be stored in an a register
+most times return values are stored in %eax
+test %eax,%eax (computes %eax & %eax -- basically checks if %eax is 0)
+x/s 0x4027d0 (inspect this address) (x/s examines address as a string)
+
+mov_:
+b- byte (8 bits)
+w- word (16 bits)
+l- long	(32 bits)
+q- quad (64 bits)
+
+int return would use %eax (32 bits)
+long int return would use %rax (64 bits)
+short int return would use %ax (16 bits)
+
+%rbp base pointer for stack memory
+%rsp stacktop pointer
+
+Attack Lab:
+
+gdb ctarget
+disas test
+disas getbuf
+disas touch1
+
+create level1.txt file
+put 8 bytes of 0 into file (00 00...)
+enter 4 more lines of it
+enter address of first line of touch1
+switch ordering to little endian (least sig on the left)
+
+./hex2raw < level1.txt > level1.raw (creating level1.raw)
+-q < level1.raw (-q doesnt send to server, everything is local)
+
+compiling your own assembly file:
+gcc -c file.s
+and either
+gcc file.o -o file
+or
+ld file.o file
+
+Pipelining:
+
+CPE(Cycles per Element) = cycles per iteration/amount of unroll(2 for i+=2)
+
+Shell Lab:
+
+waitpid(-1, &status, 0)  <--- wait for any child to finish (if looping thru and have multiple children)
+waitpid like this returns pid of first child to finish
+if you have mult children you need a loop around waitpid
+WNOHANG in the options input of waitpid doesnt make the parent wait, but makes them check if any child is
+done, if not it continues with process and comes back later
+
+ex:
+waitpid(...)
+if(WIFEXITED(status)) <-WIFEXITED returns non-zero value if child was terminated normally
+if statement will return true if WIFEXITED returns a non-zero number
+
+SOFTWARE DEVELOPMENT
+
+diff: diff file1 file2
+wc: wc -l file1
+cut: 
